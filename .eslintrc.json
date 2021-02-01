@@ -1,0 +1,46 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "no-console": "warn",
+        "no-extra-semi": "error",
+        "no-unreachable": "error",
+        "default-case": "error",
+        "default-case-last": "warn",
+        "eqeqeq": "error",
+        "no-magic-numbers": "warn",
+        "no-proto": "error",
+        "no-unused-expressions": "error",
+        "yoda": "warn",
+        "strict": "error",
+        "no-unused-vars": "error",
+        "camelcase": "error",
+        "comma-dangle": ["error", "never"],
+        "indent": ["warn", 4],
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "no-duplicate-imports": "error",
+        "no-var": "error",
+        "prefer-const": "warn",
+        "prefer-destructuring": "warn"
+    }
+}
