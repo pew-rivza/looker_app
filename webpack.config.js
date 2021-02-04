@@ -2,6 +2,8 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isDev = process.env.NODE_ENV === 'development';
 console.log("BUILD MODE: ", process.env.NODE_ENV);
@@ -13,7 +15,14 @@ module.exports = {
     module: {
         rules: [
             { test: /\.txt$/i, use: 'raw-loader' },
-            { test: /\.(png|jpe?g|gif|svg)$/i, use: 'file-loader' },
+            { test: /\.(png|jpe?g|gif|svg)$/i, use: [{
+                    loader: 'file-loader',
+                    options: {
+                        outputPath: "assets",
+                        context: path.resolve(__dirname, 'src/assets'),
+                        name: '[path][name].[ext]'
+                    }
+                }]},
             { test: /\.(ttf|woff|woff2|eot)$/i, use: 'file-loader' },
             { test: /\.(sa|sc|c)ss$/i, use: [ {
                     loader: MiniCssExtractPlugin.loader,
@@ -25,23 +34,41 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },
+    optimization: {
+        minimizer: [new TerserPlugin({
+            extractComments: false
+        })],
+    },
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: filename('js'),
+        path: path.resolve(__dirname, 'dist/static'),
+        filename: filename('js')
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './public/index.html',
-            favicon: './public/favicon.png'
+            filename: "../index.html",
+            template: './public/index.html'
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
             filename: filename('css')
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: './public/manifest.json',
+                    to: '../manifest.json'
+                },
+                {
+                    from: './public/favicon.png',
+                    to: '../favicon.png'
+                }
+            ]
         })
     ],
     mode: isDev ? 'development' : 'production',
     devServer: {
         port: 1234,
-        open: true
+        open: true,
+        contentBase: "dist"
     }
 }
