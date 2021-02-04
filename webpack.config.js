@@ -18,15 +18,24 @@ module.exports = {
             { test: /\.(png|jpe?g|gif|svg)$/i, use: [{
                     loader: 'file-loader',
                     options: {
-                        outputPath: "assets",
-                        context: path.resolve(__dirname, 'src/assets'),
-                        name: '[path][name].[ext]'
+                        outputPath: 'static/assets/',
+                        context: 'src/assets',
+                        name: '[name].[ext]'
                     }
                 }]},
-            { test: /\.(ttf|woff|woff2|eot)$/i, use: 'file-loader' },
+            { test: /\.(ttf|woff|woff2|eot)$/i, use: {
+                    loader: 'file-loader',
+                    options: {
+                        outputPath: 'static/assets',
+                        context: 'src/assets',
+                        name: '[path][name].[ext]'
+                    }
+            } },
             { test: /\.(sa|sc|c)ss$/i, use: [ {
                     loader: MiniCssExtractPlugin.loader,
-                    options: {publicPath: ""}
+                    options: {
+                        publicPath: ""
+                    }
                 }, 'css-loader', 'sass-loader' ] },
             { test: /\.(js|ts)x?$/i, loader: 'babel-loader', exclude: /node_modules/ }
         ],
@@ -40,27 +49,27 @@ module.exports = {
         })],
     },
     output: {
-        path: path.resolve(__dirname, 'dist/static'),
-        filename: filename('js')
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'static/' + filename('js')
     },
     plugins: [
         new HtmlWebpackPlugin({
-            filename: "../index.html",
+            filename: "index.html",
             template: './public/index.html'
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
-            filename: filename('css')
+            filename: 'static/' + filename('css')
         }),
         new CopyWebpackPlugin({
             patterns: [
                 {
                     from: './public/manifest.json',
-                    to: '../manifest.json'
+                    to: 'manifest.json'
                 },
                 {
                     from: './public/favicon.png',
-                    to: '../favicon.png'
+                    to: 'favicon.png'
                 }
             ]
         })
