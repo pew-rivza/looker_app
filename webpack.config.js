@@ -8,36 +8,54 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const isDev = process.env.NODE_ENV === 'development';
 console.log("BUILD MODE: ", process.env.NODE_ENV);
 
-const filename = ext => isDev ? `[name].${ext}` : `[name].[hash].${ext}`;
+const filename = ext => isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`;
+const fileLoaderOptions = {
+    outputPath: 'static/assets',
+    context: 'src/assets',
+    publicPath: "/static/assets",
+    name: `[path]${filename('[ext]')}`
+};
 
-module.exports = {
-    entry: './src/index.tsx',
+const jsLoaders = () => {
+    const loaders = [{
+        loader: 'babel-loader',
+        options: {
+            presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+                '@babel/preset-typescript'
+            ]
+        }
+    }];
+
+    if (isDev) {
+        loaders.push({
+            loader: 'eslint-loader',
+            options: {
+                fix: true
+            }
+        });
+    }
+
+    return loaders;
+};
+
+let config = {
+    entry: ['@babel/polyfill', './src/index.tsx'],
     module: {
         rules: [
-            { test: /\.txt$/i, use: 'raw-loader' },
-            { test: /\.(png|jpe?g|gif|svg)$/i, use: [{
+            { test: /\.(png|jpe?g|gif|svg|ttf|woff|woff2|eot)$/i, use: [{
                     loader: 'file-loader',
-                    options: {
-                        outputPath: 'static/assets/',
-                        context: 'src/assets',
-                        name: '[name].[ext]'
-                    }
+                    options: fileLoaderOptions
                 }]},
-            { test: /\.(ttf|woff|woff2|eot)$/i, use: {
-                    loader: 'file-loader',
-                    options: {
-                        outputPath: 'static/assets',
-                        context: 'src/assets',
-                        name: '[path][name].[ext]'
-                    }
-            } },
             { test: /\.(sa|sc|c)ss$/i, use: [ {
                     loader: MiniCssExtractPlugin.loader,
-                    options: {
-                        publicPath: ""
-                    }
+                    options: { publicPath: "" }
                 }, 'css-loader', 'sass-loader' ] },
-            { test: /\.(js|ts)x?$/i, loader: 'babel-loader', exclude: /node_modules/ }
+            { test: /\.(js|ts)x?$/i,
+                exclude: /node_modules/,
+                use: jsLoaders()
+            }
         ],
     },
     resolve: {
@@ -55,7 +73,8 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             filename: "index.html",
-            template: './public/index.html'
+            template: './public/index.html',
+            favicon: './public/favicon.png'
         }),
         new CleanWebpackPlugin(),
         new MiniCssExtractPlugin({
@@ -66,10 +85,6 @@ module.exports = {
                 {
                     from: './public/manifest.json',
                     to: 'manifest.json'
-                },
-                {
-                    from: './public/favicon.png',
-                    to: 'favicon.png'
                 }
             ]
         })
@@ -77,7 +92,10 @@ module.exports = {
     mode: isDev ? 'development' : 'production',
     devServer: {
         port: 1234,
-        open: true,
-        contentBase: "dist"
+        open: true
     }
-}
+};
+
+if (isDev) config.devtool = 'source-map';
+
+module.exports = config;

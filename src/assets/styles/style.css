@@ -7,5 +7,9 @@ body {
     background-image: url("../img/avaMAIN.jpg");
     margin: 0;
     color: blue;
+    font-family: sans-serif;
+}
+
+.heh {
     font-family: 'Caros', sans-serif;
 }

@@ -3,13 +3,19 @@ import ReactDOM from "react-dom";
 import "./assets/styles/style.css";
 import "./assets/styles/style.scss";
 import {sum} from "./sum";
-const ava = require("./assets/img/section1/Весна 2.png"); // resolve problem later (typesctipt import problem)
+const mul = require("./mul.js");
+
+const a = 11;
+const b = 1;
 
 ReactDOM.render(
     <div>привет, мир!!3 {
-        sum(11, 7)
+        sum(a, b)
     }
-    <img src={ava} alt={""}/>
+    {
+        mul(5, 6)
+    }
+    <div className={"heh"}>text ой тестовый текст</div>
     </div>,
     document.getElementById("root")
 );
