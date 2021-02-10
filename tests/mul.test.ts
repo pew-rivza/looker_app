@@ -1,4 +1,5 @@
-const mul = require('./../src/mul');
+// const mul = require('./../src/mul');
+import {mul} from "../src/mul";
 
 test('mul 3 * N, N=2..5', () => {
     expect(mul(3, 2)).toBe(6);

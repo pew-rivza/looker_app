@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./assets/styles/style.css";
 import "./assets/styles/style.scss";
 import {sum} from "./sum";
-const mul = require("./mul.js");
+import {mul} from "./mul";
 
 const a = 11;
 const b = 1;
