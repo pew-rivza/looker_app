@@ -13,7 +13,7 @@ ReactDOM.render(
         sum(a, b)
     }
     {
-        mul(5, 6)
+        mul(a, b)
     }
     <div className={"heh"}>text ой тестовый текст</div>
     </div>,

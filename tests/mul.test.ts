@@ -1,4 +1,3 @@
-// const mul = require('./../src/mul');
 import {mul} from "../src/mul";
 
 test('mul 3 * N, N=2..5', () => {
